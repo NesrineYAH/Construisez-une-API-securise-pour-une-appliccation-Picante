@@ -5,7 +5,7 @@ const Sauce = require("../models/sauces");
 const fs = require("fs");
 
 //logique POST
-
+// exporter une fonction pour créer une sauce
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
@@ -29,7 +29,7 @@ exports.createSauce = (req, res, next) => {
     .then(() => res.status(201).json({ message: "Sauce enregistrée !" }))
     .catch((error) => res.status(400).json({ error }));
 };
-
+// exporter une fonction pour modifier une sauce
 exports.upsateSAUCE = (req, res, next) => {
   //si on modifie le fichier image, récupérer le nom du fichier image sauce actuelle pour la suppréssion,
   //pour éviter d'avoir un fichier inutile dans le dossier images :
@@ -66,6 +66,7 @@ exports.upsateSAUCE = (req, res, next) => {
     }
   });
 };
+// exporter une fonction pour obtenir une sauce
 
 exports.readSauces = async (req, res) => {
   try {
@@ -84,6 +85,7 @@ exports.readSauce = async (req, res) => {
     res.status(500).send("error");
   }
 };
+7; // exporter une fonction pour supprimer une sauce
 
 exports.deleteSauce = async (req, res) => {
   try {
@@ -101,17 +103,14 @@ exports.likeSauce = async (req, res) => {
 
     const sauce = await Sauce.findById(req.params.id);
     const element = sauce.usersDisliked.indexOf(req.auth.userId);
-    const index = sauce.usersLiked.indexOf(req.auth.userId); // récupération de position userId  dans le tableau userliked (si -1, pas dans tableau)
+    // récupération de position userId dans le tableau userliked (si -1, pas dans tableau)
+    const index = sauce.usersLiked.indexOf(req.auth.userId);
+    // si le like n'existe pas on ajoutera le like dans le tableau userliked
     if (like === 1 && index === -1) {
       sauce.usersLiked.push(req.auth.userId);
       sauce.likes++;
 
-      /*if (index != -1) {
-        // si userId est dans tableau userliked, on supprime son userId dans le tableau
-        sauce.usersLiked.splice(index, 1); // pour sipprimer le userID dans le tableau des userliked (supprime le like)
-      } else {
-        sauce.usersLiked.push(req.auth.userId); // si le like n'existe pas on ajoutera le like dans le tableau userliked
-      }*/
+      // si le like n'existe pas on ajoutera le like dans le tableau userliked
     } else if (like === 0) {
       sauce.usersLiked = sauce.usersLiked.filter(
         (userId) => userId != req.auth.userId

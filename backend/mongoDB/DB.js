@@ -1,7 +1,15 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv").config();
+const configUser = process.env.CONFIG_USER;
+const configPassword = process.env.CONFIG_PASSWORD;
+
 mongoose
   .connect(
-    "mongodb+srv://nesrineyahoum:Aban0U0EqEa04KRm@cluster0.aumt3cr.mongodb.net/?retryWrites=true&w=majority",
+    "mongodb+srv://" +
+      configUser +
+      ":" +
+      configPassword +
+      "@cluster0.aumt3cr.mongodb.net/?retryWrites=true&w=majority",
     {
       useUnifiedTopology: true,
     }

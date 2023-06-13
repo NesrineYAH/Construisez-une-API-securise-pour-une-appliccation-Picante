@@ -15,5 +15,5 @@ const sauceSchema = mongoose.Schema({
   usersDisliked: { type: [String] },
 });
 
-//Exportation de sauceSchema :
+//Exportation de sauceSchema pour qu'il soit réutilisable:
 module.exports = mongoose.model("Sauce", sauceSchema);
