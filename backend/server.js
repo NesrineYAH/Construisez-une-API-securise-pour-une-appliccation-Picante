@@ -1,79 +1,50 @@
-/*
 const http = require("http");
-const express = require("express");
-const app = express();
-
-//const app = require("./app");
-
-const userRoute = require("./routes/user");
-const sauceRoute = require("./routes/sauce");
+const app = require("./app");
 const path = require("path");
-const mongoose = require("./mongoDB/DB");
-const cors = require("cors");
-const bodyParser = require("body-parser"); 
+const dotenv = require("dotenv").config();
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const normalizePort = (val) => {
+  const port = parseInt(val, 10);
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  next();
+  if (isNaN(port)) {
+    return val;
+  }
+  if (port >= 0) {
+    return port;
+  }
+  return false;
+};
+const port = normalizePort(process.env.PORT || 3000);
+app.set("port", port);
+
+const errorHandler = (error) => {
+  if (error.syscall !== "listen") {
+    throw error;
+  }
+  const address = server.address();
+  const bind =
+    typeof address === "string" ? "pipe " + address : "port: " + port;
+  switch (error.code) {
+    case "EACCES":
+      console.error(bind + " requires elevated privileges.");
+      process.exit(1);
+      break;
+    case "EADDRINUSE":
+      console.error(bind + " is already in use.");
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+};
+
+const server = http.createServer(app);
+
+server.on("error", errorHandler);
+server.on("listening", () => {
+  const address = server.address();
+  const bind = typeof address === "string" ? "pipe " + address : "port " + port;
+  console.log("Listening on " + bind);
 });
-app.options("*", cors());
 
-app.use("/api/auth", userRoute);
-app.use("/api", sauceRoute);
-// pour indiquer à Express qu'il faut gérer la ressource images de manière statique
-app.use("/images", express.static(__dirname + "/images"));
-
-app.listen(3000, () => {
-  console.log("Serveur a demarré sur le port 3000");
-});
-*/
-
-const http = require("http");
-const express = require("express");
-const app = express();
-
-//const app = require("./app");
-
-const userRoute = require("./routes/user");
-const sauceRoute = require("./routes/sauce");
-const path = require("path");
-const mongoose = require("./mongoDB/DB");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  next();
-});
-app.options("*", cors());
-
-app.use("/api/auth", userRoute);
-app.use("/api", sauceRoute);
-// pour indiquer à Express qu'il faut gérer la ressource images de manière statique
-app.use("/images", express.static(__dirname + "/images"));
-
-app.listen(3000, () => {
-  console.log("Serveur a demarré sur le port 3000");
-});
+server.listen(port);
