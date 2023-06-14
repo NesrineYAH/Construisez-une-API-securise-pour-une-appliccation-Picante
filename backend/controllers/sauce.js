@@ -121,11 +121,8 @@ exports.likeSauce = async (req, res) => {
 
       sauce.likes = sauce.usersLiked.length;
       sauce.dislikes = sauce.usersDisliked.length;
-      /*const indexDislike = sauce.usersDisliked.indexOf(req.auth.userId); // récupération de position userId  dans le tableau userDiliked (si -1, pas dans tableau)
-      if (indexDislike != -1) {
-        sauce.usersDisliked.slice(indexDislike, 1); // // pour sipprimer le userID dans le tableau des usersDisliked (doucmenttion slice )
-        sauce.disliked = sauce.usersDisliked.length; // le nombre des userId qui ont dislicker sur cette sauce
-      }*/
+
+      // récupération de position userId  dans le tableau userDiliked
     } else if (like === -1 && element === -1) {
       sauce.usersDisliked.push(req.auth.userId);
       sauce.dislikes++;
